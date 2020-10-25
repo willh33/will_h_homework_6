@@ -27,6 +27,10 @@ let secondUrl = "https://api.openweathermap.org/data/2.5/onecall?";
 let apiKey = '&appid=32812cc185c3b2473bf291a02911cb01';
 
 $(function() {
+	const init = () => {
+		displayPastSearches(true);
+	};
+
 	/**
 	 * Search for a city's weather
 	 */
@@ -52,27 +56,36 @@ $(function() {
 		//Convert kelvin temp to farhenheit
 		// temp = Math.floor(1.8 * (temp - 273) + 32, 2);
 
-		weatherTitleP.text(title + '(' + today + ')');
+		weatherTitleP.text(title + ' (' + today + ')');
 		weatherTempP.text(convertKelvinToF(temp));
 		weatherHumidP.text(humidity);
 		weatherWindP.text(wind);
 		weatherUvP.text(uv);
+
+		if(uv < 4)
+			weatherUvP.addClass('bg-success').removeClass('bg-warning bg-danger');
+		else if(uv < 8)
+			weatherUvP.addClass('bg-warning').removeClass('bg-success bg-danger');
+		else
+			weatherUvP.addClass('bg-danger').removeClass('bg-warning bg-success');
+
+		weatherUvP.addClass('text-white')
 	};
 
 	/**
 	 * Display city's next 5 day forecast
 	 */
 	const displayForecast = (forecast) => {
-		let now = moment();
 		for(i = 1; i < 6; i++)
 		{
+			let now = moment();
 			let weather = forecast[i];
-			let col = $("<div>").addClass('col-md-2');
+			let col = $("<div>").addClass('col');
 			let cardDiv = $("<div>").addClass('card');
 			let cardBody = $("<div>").addClass('card-body');
-			let cardTitle = $("<div>").addClass('card-title').text(now.add(i, 'days').format("MM/DD/YYY"));
-			let weatherIcon = $('<div>');
-			let tempDiv = $("<div>").text("Temp: " + convertKelvinToF(weather.temp.day) + '&#176;F');
+			let cardTitle = $("<div>").addClass('card-title').text(now.add(i, 'days').format("MM/DD/YYYY"));
+			let weatherIcon = $('<div>').addClass('wi wi-owm-' + weather.weather[0].id);
+			let tempDiv = $("<div>").text("Temp: " + convertKelvinToF(weather.temp.day) + String.fromCharCode(176) + 'F');
 			let humidDiv = $("<div>").text("Humidity: " + weather.humidity + '%');
 
 			cardBody.append(cardTitle, weatherIcon, tempDiv, humidDiv);
@@ -89,7 +102,7 @@ $(function() {
 	/**
 	 * Get and display past searches
 	 */
-	const displayPastSearches = () => {
+	const displayPastSearches = (searchLastSearchedCity = false) => {
 		pastSearchList.empty();
 
 		//Get past searches
@@ -103,6 +116,8 @@ $(function() {
 			});
 			pastSearchList.append(li);
 		});
+		if(searchLastSearchedCity && searches.length > 0)
+			searchCityWeather(searches[searches.length - 1]);
 	};
 
 	/**
@@ -117,7 +132,8 @@ $(function() {
 		}
 	};
 
-	displayPastSearches();
+	init();
+
 	//Event Handling
 	searchBtn.on('click', () => {
 		//Get text from input field
