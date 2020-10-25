@@ -17,6 +17,7 @@ let weatherTempP = $('#weather-card-temp');
 let weatherHumidP = $('#weather-card-humid');
 let weatherWindP = $('#weather-card-wind');
 let weatherUvP = $('#weather-card-uv');
+let titleIconSpan = $('#title-icon');
 
 let forecastDiv = $('#forecast-div');
 
@@ -46,6 +47,10 @@ $(function() {
 			return res;			
 		});
 		displayCurrentWeather(latAndLongCall.name, latAndLongCall.main.temp, latAndLongCall.main.humidity, latAndLongCall.wind.speed, oneCall.current.uvi);
+
+		let currentIconSpan = $("<span>").addClass('wi wi-owm-' + oneCall.current.weather[0].id + ' ml-2');
+		weatherTitleP.append(currentIconSpan);
+
 		displayForecast(oneCall.daily);
 	};
 
@@ -76,12 +81,13 @@ $(function() {
 	 * Display city's next 5 day forecast
 	 */
 	const displayForecast = (forecast) => {
+		forecastDiv.empty();
 		for(i = 1; i < 6; i++)
 		{
 			let now = moment();
 			let weather = forecast[i];
 			let col = $("<div>").addClass('col');
-			let cardDiv = $("<div>").addClass('card');
+			let cardDiv = $("<div>").addClass('card bg-primary text-white');
 			let cardBody = $("<div>").addClass('card-body');
 			let cardTitle = $("<div>").addClass('card-title').text(now.add(i, 'days').format("MM/DD/YYYY"));
 			let weatherIcon = $('<div>').addClass('wi wi-owm-' + weather.weather[0].id);
