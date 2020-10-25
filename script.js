@@ -23,7 +23,9 @@ let forecastDiv = $('#forecast-div');
 
 let today = moment().format('MM/DD/YYYY');
 
+//Get long and lat
 let firstUrl = 'https://api.openweathermap.org/data/2.5/weather?q='
+//Get daily forecast
 let secondUrl = "https://api.openweathermap.org/data/2.5/onecall?";
 let apiKey = '&appid=32812cc185c3b2473bf291a02911cb01';
 
