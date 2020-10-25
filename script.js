@@ -38,18 +38,27 @@ $(function() {
 	 * Search for a city's weather
 	 */
 	const searchCityWeather = async (city) => {
+		//Save search to local storage
 		saveSearch(city);
+
+		//Show past searches on screen
 		displayPastSearches();
+
+		//Buidl the url
 		let buildUrl = firstUrl + city + apiKey;
 		let latAndLongCall = await $.ajax( {url: buildUrl, method: 'GET'} ).then(res => {
 			return res;			
 		});
+		//Build second url
 		buildUrl = secondUrl + "lat=" + latAndLongCall.coord.lat + "&lon=" + latAndLongCall.coord.lon + apiKey;
 		let oneCall = await $.ajax( {url: buildUrl, method: 'GET'} ).then(res => {
 			return res;			
 		});
+
+		//Display current info
 		displayCurrentWeather(latAndLongCall.name, latAndLongCall.main.temp, latAndLongCall.main.humidity, latAndLongCall.wind.speed, oneCall.current.uvi);
 
+		//Display forecast
 		let currentIconSpan = $("<span>").addClass('wi wi-owm-' + oneCall.current.weather[0].id + ' ml-2');
 		weatherTitleP.append(currentIconSpan);
 
@@ -69,6 +78,7 @@ $(function() {
 		weatherWindP.text(wind);
 		weatherUvP.text(uv);
 
+		//Check how favorable the uv is
 		if(uv < 4)
 			weatherUvP.addClass('bg-success').removeClass('bg-warning bg-danger');
 		else if(uv < 8)
@@ -84,10 +94,13 @@ $(function() {
 	 */
 	const displayForecast = (forecast) => {
 		forecastDiv.empty();
+
+		//loop over the forecast array for the next 5 days
 		for(i = 1; i < 6; i++)
 		{
 			let now = moment();
 			let weather = forecast[i];
+			//Build a card for the day's forecast
 			let col = $("<div>").addClass('col');
 			let cardDiv = $("<div>").addClass('card bg-primary text-white');
 			let cardBody = $("<div>").addClass('card-body');
@@ -96,6 +109,7 @@ $(function() {
 			let tempDiv = $("<div>").text("Temp: " + convertKelvinToF(weather.temp.day) + String.fromCharCode(176) + 'F');
 			let humidDiv = $("<div>").text("Humidity: " + weather.humidity + '%');
 
+			//Append everything to the DOM
 			cardBody.append(cardTitle, weatherIcon, tempDiv, humidDiv);
 			cardDiv.append(cardBody);
 			col.append(cardDiv);
@@ -103,6 +117,10 @@ $(function() {
 		}
 	};
 
+	/**
+	 * Convert kelvin to fahrenheit
+	 * @param {*} k 
+	 */
 	const convertKelvinToF = (k) => {
 		return Math.floor(1.8 * (k - 273) + 32, 2);
 	};
@@ -119,11 +137,14 @@ $(function() {
 		//Add the searches to the DOM
 		searches.forEach(search => {
 			let li = $("<li>").text(search).addClass('past-search list-group-item').attr('data-text', search);
+			//Add click event to do a search as one is clicked
 			li.click(function() {
 				searchCityWeather($(this).attr('data-text'));
 			});
 			pastSearchList.append(li);
 		});
+
+		//If searchlastSearchedCity is true automatically search the last one
 		if(searchLastSearchedCity && searches.length > 0)
 			searchCityWeather(searches[searches.length - 1]);
 	};
@@ -132,7 +153,10 @@ $(function() {
 	 * Add search to past searches
 	 */
 	const saveSearch = (text) => {
+		//Get the past searches from local storage
 		let searches = localStorage.pastSearches ? JSON.parse(localStorage.pastSearches) : [];
+
+		//If it doesn't already include the search term, add it
 		if(!searches.includes(text))
 		{
 			searches.push(text);
