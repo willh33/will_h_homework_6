@@ -1,4 +1,13 @@
+TItle: Weather Dashboard
 <a href="https://willh33.github.io/will_h_homework_6/">Github Pages Link</a>
+
+<h4>Technologies Used</h4>
+<ul>
+	<li>HTML</li>
+	<li>CSS</li>
+	<li>JavaScript</li>
+	<li>JQuery</li>
+</ul>
 
 # 06 Server-Side APIs: Weather Dashboard
 
