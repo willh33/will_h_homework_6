@@ -1,6 +1,6 @@
 # 06 Server-Side APIs: Weather Dashboard
 
-<a href="https://willh33.github.io/will_h_homework_6/">Github Pages Link</a>
+<a href="https://willh33.github.io/will_h_homework_6/">Live Deployed Application</a>
 
 <h4>Technologies Used</h4>
 <ul>
