@@ -14,5 +14,6 @@ A weather dashboard built with dynamically updated HTML and CSS. Enter a city in
 
 <img src="./Assets/06-server-side-apis-homework-demo.png">
 
+<a href='https://github.com/willh33'>Will Harrison</a>
 - - -
 © 2019 MIT license
